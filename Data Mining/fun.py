@@ -3,6 +3,7 @@ def calculate_center_of_class(list):
     for element in list:
         sum += element
     return sum/len(list)
+
 def min_list (list , type):     
     min_list = []
     match type:
@@ -27,7 +28,8 @@ def min_list (list , type):
     return min_list.index(min(min_list))
 
 def algorithm (list , type):
-    while len(list[len(list)]) !=1:
+    while len(list) !=1:
+        
         index_of_min_class = min_list(list , type)
         near_min_class = list[index_of_min_class + 1]
         new_list_of_classes = list[len(list)]
@@ -58,10 +60,11 @@ test = [
     [36],
     [40],
 ]
+# print(len(test))
 # test2 = ["G","H","I",]
 # print(test)
 # print(test.remove(test[4]))
 # print(test)
 # print(test+test2)
 
-print(algorithm(test , 0))
+# print(algorithm(test , 0))

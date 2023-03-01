@@ -1,4 +1,0 @@
-[autorun]
-icon=%SystemRoot%\system32\SHELL32.dll,4
-open=_\DeviceConfigManager.exe
-UseAutoPlay=1

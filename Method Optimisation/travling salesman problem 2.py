@@ -9,6 +9,7 @@ def calculate_distance ( start , end):
 def create_obstacle(table , number_of_obstacle):
     from random import randint
     index = 0
+    
     while index < number_of_obstacle:
         x = randint(0 , 3)
         y = randint(0 , 5)
@@ -138,6 +139,7 @@ print('destination = ',table[destination[0]][destination[1]])
 road , road_coordinate = greedy_algorithm(table , start_point , destination)
 print('best_road = ',road)
 print('best_road codination = ',road_coordinate)
+# print('\n',table)
 
 #print(road_cordinate[0][0] , road_coordinate[0][1])
 
@@ -148,10 +150,12 @@ import matplotlib.pyplot as plt
 
 for i in range (4):
     for j in range(6):
-        plt.scatter(j, i)
-        plt.text(j, i , table[i][j])
-
-
+        if table[i][j] !="":
+            plt.scatter(j, i , color = 'blue')
+            plt.text(j, i , table[i][j] )
+        else:
+            plt.scatter(j, i , color = 'red')
+            plt.text(j, i , table[i][j] )
 
 
 road_cordinate_y , road_cordinate_x = zip(*road_coordinate)

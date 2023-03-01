@@ -30,7 +30,7 @@ def draw_city():
 
 def draw_best_road( best_road):
     global screen , cities_cordinates
-    for i in range (len(best_road) - 1 ):
+    for i in range(len(best_road) - 1 ):
         pygame.draw.line(screen, (255,255,255),cities_cordinates[best_road[i]] , cities_cordinates[best_road[i+1]], 5)
 
 def calculate_distance(city_one , city_two):
@@ -63,6 +63,19 @@ def glutton_algorithme(city_number , cities_cordinate):
     return best_road , distance
 
 
+def best_road_update (city_number , cities_cordinate ,best_road , distance , number_of_update):
+    from  random import shuffle
+    i = 0
+    while i < number_of_update:
+        #slicing only the middle part of best road 
+        middle_of_best_road = best_road[1:-1]
+        middle_of_best_road = shuffle(middle_of_best_road)
+        #concatinate the 3 list (first element , middle elemnts , last element)
+        best_road = best_road[:1] + middle_of_best_road + best_road[-1:]
+        best_road = best_road
+        i += 1
+    
+
 
 
 
@@ -70,7 +83,7 @@ def glutton_algorithme(city_number , cities_cordinate):
 
 # Define the variables 
 
-city_number = 15
+city_number = 8
 
 city_thickness = 10
 
