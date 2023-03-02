@@ -20,4 +20,5 @@ my_list = [2, 3, 8, 3, 9, 2, 0]
 # min_index = my_list.index(min(filter(lambda x: x != 0, my_list)))
 
 # print(min_index)
-print (my_list[:1])
+import random
+print (random.sample(my_list[1:-1] , len(my_list[1:-1])))

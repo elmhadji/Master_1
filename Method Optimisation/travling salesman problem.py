@@ -63,19 +63,23 @@ def glutton_algorithme(city_number , cities_cordinate):
     return best_road , distance
 
 
-def best_road_update (city_number , cities_cordinate ,best_road , distance , number_of_update):
-    from  random import shuffle
+def best_road_update ( cities_cordinate , distance ,best_road , number_of_update):
+    from  random import sample
     i = 0
-    while i < number_of_update:
+    new_distance = distance
+    while (i < number_of_update) and (new_distance >= distance):
+        new_distance = 0
         #slicing only the middle part of best road 
         middle_of_best_road = best_road[1:-1]
-        middle_of_best_road = shuffle(middle_of_best_road)
+        middle_of_best_road = sample(middle_of_best_road , len(middle_of_best_road))
         #concatinate the 3 list (first element , middle elemnts , last element)
         best_road = best_road[:1] + middle_of_best_road + best_road[-1:]
         best_road = best_road
+        for index , city_cordinate in enumerate(cities_cordinate[:-1]):
+            new_distance += calculate_distance(city_cordinate , cities_cordinate[index + 1])  
         i += 1
-    
-
+        #print(new_distance)
+    return new_distance , best_road
 
 
 
@@ -97,8 +101,12 @@ cities_cordinates = [(randint(city_thickness , window_width - city_thickness) , 
 draw_city()
 
 best , dst = glutton_algorithme(city_number , cities_cordinates)
-print('best =',best,'dst = ',dst)
-draw_best_road(best)
+print('best road =',best,'distance = ',dst)
+draw_best_road(best) 
+
+dst ,best = best_road_update(cities_cordinates , dst ,best ,900 )
+
+print('new best road =',best,'new distance = ',dst)
 
 
 # def TSP (city_number , cities_cordinates):
