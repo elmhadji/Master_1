@@ -28,10 +28,16 @@ def draw_city():
     # First circle is white
     pygame.draw.circle(screen , (255,255,255) , cities_cordinates[0], city_thickness )
 
-def draw_best_road( best_road):
+    #update the screen 
+    pygame.display.update()
+
+def draw_best_road( best_road , road_color_in_rgb):
     global screen , cities_cordinates
     for i in range(len(best_road) - 1 ):
-        pygame.draw.line(screen, (255,255,255),cities_cordinates[best_road[i]] , cities_cordinates[best_road[i+1]], 5)
+        pygame.draw.line(screen, road_color_in_rgb,cities_cordinates[best_road[i]] , cities_cordinates[best_road[i+1]], 5)
+
+    #update the screen
+    pygame.display.update()
 
 def calculate_distance(city_one , city_two):
     from math import sqrt
@@ -102,12 +108,15 @@ draw_city()
 
 best , dst = glutton_algorithme(city_number , cities_cordinates)
 print('best road =',best,'distance = ',dst)
-draw_best_road(best) 
+draw_best_road(best , (255,255,255) ) 
 
-dst ,best = best_road_update(cities_cordinates , dst ,best ,900 )
+dst ,new_best_road = best_road_update(cities_cordinates , dst ,best ,900 )
 
-print('new best road =',best,'new distance = ',dst)
+print('new best road =',new_best_road,'new distance = ',dst)
 
+draw_city()
+
+draw_best_road(new_best_road , (255,0,0))
 
 # def TSP (city_number , cities_cordinates):
 #     from numpy import zeros
@@ -145,15 +154,38 @@ print('new best road =',best,'new distance = ',dst)
 # pygame.draw.line(screen, (255,255,255),cities_cordinates[city_number-1] , cities_cordinates[0], 5)
 
 
-pygame.display.update()
+
 
 
 running = True
+index_of_switching_road = 1
+key_down = False
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:#type:ignore
             running = False
+
+    keys = pygame.key.get_pressed()
+
+    # when we press the key for first time 
+    if not key_down and  keys[pygame.K_LEFT] :#type:ignore
+        print('pressed')
+        key_down = True
+        if index_of_switching_road == 0:
+            draw_city()
+            draw_best_road(new_best_road , (255,0,0))
+            index_of_switching_road = 1
+        elif index_of_switching_road == 1:
+            draw_city()
+            draw_best_road(best , (255,255,255))
+            index_of_switching_road = 0
+
+    # we change the key_state when we release it 
+    elif key_down and not keys[pygame.K_LEFT]:#type:ignore
+        print("realese")
+        key_down = False
+
         
     
         

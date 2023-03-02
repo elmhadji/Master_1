@@ -1,63 +1,63 @@
-def calculate_center_of_class(list):
-    sum = 0
-    for element in list:
-        sum += element
-    return sum/len(list)
+def get_median_class (list_of_classes):
+    result = [sum (classe)/len(classe) for classe in list_of_classes ]
+    return result
 
-def min_list (list , type):     
+def get_subtruction_list (list_of_classes , type):
     min_list = []
     match type:
-        case 0: # Inter Class
-            for index in range(len(list) - 1):
-                sub_list_1 = list[index]
-                sub_list_2 = list[index + 1]
-                min_list.append(abs(sub_list_1[len(sub_list_1)]- sub_list_2[0]))
+        case 0:#Inter Class
+            for index , classe in enumerate(list_of_classes[:-1]):
+                result = abs(classe[-1] - list_of_classes[index + 1][0])
+                min_list.append(result)
+        case 1:#Intra Class
+            for index , classe in enumerate(list_of_classes[:-1]):
+                result = abs(classe[0] - list_of_classes[index + 1][-1])
+                min_list.append(result)
+        case 2:#Bay Center
+            median_classes = get_median_class(list_of_classes)
+            for index , classe in enumerate(median_classes[:-1]):
+                result = abs(classe - median_classes[index + 1])
+                min_list.append(result)
+        case _:
+            pass
 
-        case 1: # Intra Class
-            for index in range(len(list) - 1):
-                sub_list_1 = list[index]
-                sub_list_2 = list[index + 1]
-                min_list.append(abs(sub_list_1[0]- sub_list_2[len(sub_list_1)]))
+    return min_list
 
-        case 2: # Bay Center
-            for index in range(len(list) - 1):
-                center_sub_list_1 = calculate_center_of_class(list[index])
-                center_sub_list_2 = calculate_center_of_class(list[index + 1])
-                min_list.append(abs(center_sub_list_1- center_sub_list_2))
-
-    return min_list.index(min(min_list))
-
-def algorithm (list , type):
-    while len(list) !=1:
-        
-        index_of_min_class = min_list(list , type)
-        near_min_class = list[index_of_min_class + 1]
-        new_list_of_classes = list[len(list)]
-        
-        new_list_of_classes.remove(new_list_of_classes[index_of_min_class])
-        new_list_of_classes[index_of_min_class] = new_list_of_classes[index_of_min_class] + near_min_class
-        list.append(new_list_of_classes)
+def CAH_algorithme (list_of_classes , type):
+    new_classes = [list_of_classes.copy()]
+    i=0
+    while len(list_of_classes) != 1 :
+        list_of_substuction = get_subtruction_list(list_of_classes , type)
+        # print(list_of_substuction)
+        #TODO: to upgrade the algorithm make it slecte all the same min value in one iteration
+        index_of_min_class = list_of_substuction.index(min(list_of_substuction))
+        #saving the neigbor class
+        neigbor_class = list_of_classes[index_of_min_class + 1]
+        #new class
+        neigbor_class = list_of_classes[index_of_min_class] + neigbor_class
+        # deleting the old class
+        del list_of_classes[index_of_min_class + 1]
+        list_of_classes[index_of_min_class] = neigbor_class
+        new_classes.append(list_of_classes.copy())
+    return new_classes
 
 
 test = [
+    [1],
+    [1],
     [2],
     [3],
-    [4],
-    [4],
+    [5],
     [5],
     [6],
-    [7],
-    [8],
     [9],
-    [12],
-    [13],
+    [9],
     [14],
-    [19],
-    [22],
-    [29],
-    [33],
-    [34],
-    [36],
+    [14],
+    [17],
+    [21],
+    [27],
+    [30],
     [40],
 ]
 # print(len(test))
@@ -66,5 +66,12 @@ test = [
 # print(test.remove(test[4]))
 # print(test)
 # print(test+test2)
+result = CAH_algorithme(test , 2)
+for index , element in enumerate(result):
+    print(index,element)
 
-# print(algorithm(test , 0))
+
+# for element in CAH_algorithme(test , 0):
+#     print(element)
+
+# print(len(CAH_algorithme(test , 0)))
