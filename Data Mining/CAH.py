@@ -28,7 +28,7 @@ def CAH_algorithme (list_of_classes , type):
     i=0
     while len(list_of_classes) != 1 :
         list_of_substuction = get_subtruction_list(list_of_classes , type)
-        # print(list_of_substuction)
+        # print(list_of_substuction)D
         #TODO: to upgrade the algorithm make it slecte all the same min value in one iteration
         index_of_min_class = list_of_substuction.index(min(list_of_substuction))
         #saving the neigbor class
