@@ -170,7 +170,7 @@ while running:
 
     # when we press the key for first time 
     if not key_down and  keys[pygame.K_LEFT] :#type:ignore
-        print('pressed')
+        # print('pressed')
         key_down = True
         if index_of_switching_road == 0:
             draw_city()
@@ -183,7 +183,7 @@ while running:
 
     # we change the key_state when we release it 
     elif key_down and not keys[pygame.K_LEFT]:#type:ignore
-        print("realese")
+        #print("realese")
         key_down = False
 
         

@@ -18,8 +18,11 @@ def t(a):
 
 my_list = [[2], [3], [3], [8,9,10], [11], [12], [13]]
 
-print(sum([2]))
+s = '1,2,1,2,3,4'
 
+test = [[int(e)] for e in s.split(',')]
+
+print(test)
 # min_index = my_list.index(min(filter(lambda x: x != 0, my_list)))
 
 # print(min_index)
