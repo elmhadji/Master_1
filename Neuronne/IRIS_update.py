@@ -99,7 +99,7 @@ if __name__ == '__main__':
     test_inputs , test_output = np.array(test_data[['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']]) ,np.array(test_data[['Species_Iris-setosa','Species_Iris-versicolor','Species_Iris-virginica']]).reshape((30,3))#type:ignore
     
     
-    nn = NeuralNetwork()
+    nn = NeuralNetwork(hidden_layer_1=10 ,hidden_layer_2=10)
     epochs = 900
     learning_rate = 0.01
     cost = []
@@ -112,8 +112,8 @@ if __name__ == '__main__':
     plt.plot(cost)
     plt.show()
     output = nn.feedforward(train_inputs)
-    print(f'the loss = {nn.RSME(output,train_output)}')
+    print(f'the loss = {1 - nn.RSME(output,train_output)}')
     print('testing phase')
     output = nn.feedforward(test_inputs)
-    print(f'the loss = {nn.RSME(output,test_output)}')
+    print(f'the loss = {1 - nn.RSME(output,test_output)}')
     print('end of script')
