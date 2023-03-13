@@ -99,8 +99,8 @@ if __name__ == '__main__':
     test_inputs , test_output = np.array(test_data[['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']]) ,np.array(test_data[['Species_Iris-setosa','Species_Iris-versicolor','Species_Iris-virginica']]).reshape((30,3))#type:ignore
     
     
-    nn = NeuralNetwork(hidden_layer_1=10 ,hidden_layer_2=10)
-    epochs = 900
+    nn = NeuralNetwork(hidden_layer_1=20 ,hidden_layer_2=20)
+    epochs = 100000
     learning_rate = 0.01
     cost = []
     for i in range(epochs):

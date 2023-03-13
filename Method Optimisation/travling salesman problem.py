@@ -1,13 +1,26 @@
 import pygame
 from random import randint
 
+
+# Define the variables 
+
+window_width , window_height = 900 , 650
+
+
+city_number = int (input('enter the number of city : ') ) 
+
+city_thickness = 10
+
+cities_cordinates = [(randint(city_thickness , window_width - city_thickness) , \
+    randint(city_thickness , window_height - city_thickness))for i in range (city_number)]
+
+
 # initialize pygame 
 
 pygame.init()   #type:ignore
 
 #Set Up The Window
 
-window_width , window_height = 900 , 650
 screen = pygame.display.set_mode((window_width , window_height))
 pygame.display.set_caption('TSP using Pygame and the glutton algorithm')
 
@@ -68,93 +81,99 @@ def glutton_algorithme(city_number , cities_cordinate):
     best_road = visited
     return best_road , distance
 
+# movement type Algorithms :
 
-def best_road_update ( cities_cordinate , distance ,best_road , number_of_update):
+# 1) exchange 
+
+def best_road_update_exchange ( cities_cordinate , distance ,best_road , number_of_update):
     from  random import sample
     i = 0
     new_distance = distance
     while (i < number_of_update) and (new_distance >= distance):
         new_distance = 0
-        #slicing only the middle part of best road 
+        # slicing only the middle part of best road (first and last are start point cannot be change)
         middle_of_best_road = best_road[1:-1]
         middle_of_best_road = sample(middle_of_best_road , len(middle_of_best_road))
-        #concatinate the 3 list (first element , middle elemnts , last element)
+        # concatinate the 3 list (first element , middle elemnts , last element)
         best_road = best_road[:1] + middle_of_best_road + best_road[-1:]
-        best_road = best_road
+        # calculating the distance of new solution
         for index , city_cordinate in enumerate(cities_cordinate[:-1]):
             new_distance += calculate_distance(city_cordinate , cities_cordinate[index + 1])  
         i += 1
-        #print(new_distance)
     return new_distance , best_road
 
+# 2) shift 
 
+def best_road_update_shift ( cities_cordinate , distance ,best_road , number_of_update):
+    from  random import randint
+    i = 0
+    new_distance = distance
+    while (i < number_of_update) and (new_distance >= distance):
+        new_distance = 0
+        # slicing only the middle part of best road (first and last are start point cannot be change)
+        middle_of_best_road = best_road[1:-1]
+        # save random city and delet it 
+        city_index = middle_of_best_road.pop(randint( 0 , len(middle_of_best_road) - 1))
+        # insert city in random position 
+        middle_of_best_road.insert(randint( 0 , len(middle_of_best_road) - 1) , city_index)
+        # concatinate the 3 list (first element , middle elemnts , last element)
+        best_road = best_road[:1] + middle_of_best_road + best_road[-1:]
+        # calculating the distance of new solution
+        for index , city_cordinate in enumerate(cities_cordinate[:-1]):
+            new_distance += calculate_distance(city_cordinate , cities_cordinate[index + 1])  
+        i += 1
+    return new_distance , best_road
 
+# 3) inverse 
 
-
-# Define the variables 
-
-city_number = 8
-
-city_thickness = 10
-
-cities_cordinates = [(randint(city_thickness , window_width - city_thickness) , \
-    randint(city_thickness , window_height - city_thickness))for i in range (city_number)]
-
-
+def best_road_update_inverse ( cities_cordinate , distance ,best_road , number_of_update):
+    from  random import randint
+    i = 0
+    new_distance = distance
+    while (i < number_of_update) and (new_distance >= distance):
+        new_distance = 0
+        # slicing only the middle part of best road (first and last are start point cannot be change)
+        middle_of_best_road = best_road[1:-1]
+        # selcting random index 
+        start = randint(0 , len(middle_of_best_road) - 1)
+        end = randint( start , len(middle_of_best_road) - 1)
+        # inverse the list from selected index
+        middle_of_best_road[start : end] = reversed(middle_of_best_road[start : end])
+        # concatinate the 3 list (first element , middle elemnts , last element)
+        best_road = best_road[:1] + middle_of_best_road + best_road[-1:]
+        # calculating the distance of new solution
+        for index , city_cordinate in enumerate(cities_cordinate[:-1]):
+            new_distance += calculate_distance(city_cordinate , cities_cordinate[index + 1])  
+        i += 1
+    return new_distance , best_road
 
 # The main prgrame
 
 draw_city()
 
 best , dst = glutton_algorithme(city_number , cities_cordinates)
-print('best road =',best,'distance = ',dst)
-draw_best_road(best , (255,255,255) ) 
+print('best road ={} distance = {}'.format(best , dst))
+draw_best_road(best , (255,255,255) )
 
-dst ,new_best_road = best_road_update(cities_cordinates , dst ,best ,900 )
+dst_exchange ,best_road_exchange = best_road_update_exchange(cities_cordinates , dst ,best ,900 )
 
-print('new best road =',new_best_road,'new distance = ',dst)
+dst_shift ,best_road_shift = best_road_update_shift(cities_cordinates , dst ,best ,900 )
+
+dst_inverse ,best_road_inverse = best_road_update_inverse(cities_cordinates , dst ,best ,900 )
+
+
+
+print('best road using exchange method = {} new distance = {}'.format(best_road_exchange,dst_exchange))
+
+print('best road using shift method = {} new distance = {}'.format(best_road_shift,dst_shift))
+
+print('best road using inverse method = {} new distance = {}'.format(best_road_inverse,dst_inverse))
+
+
 
 draw_city()
 
-draw_best_road(new_best_road , (255,0,0))
-
-# def TSP (city_number , cities_cordinates):
-#     from numpy import zeros
-#     road_taken = zeros([city_number , city_number])
-#     total_distance = 0
-#     for i in range(city_number):
-#         city_cord = cities_cordinates[i]
-#         distence_to_next_city = []
-#         if i != city_number-1 : # TODO; change the condition 
-#             for j in range(i+1 , city_number):
-#                 next_city_cord = cities_cordinates[j]
-#                 distence_to_next_city.append(calculate_distance(city_cord , next_city_cord))
-#             # get the min distance between city and there index
-#             print('i = ',i,'distance to next city:',distence_to_next_city )
-
-#             index , distance = calculate_min_distance(distence_to_next_city)
-            
-#             total_distance += distance
-#             print('index = ',index,'min distance to next city:',distance )
-
-#             pygame.draw.line(screen, (255,255,255),cities_cordinates[i] , cities_cordinates[index+i+1], 5)
-#     print('total distance = ',total_distance)
-
-
-
-
-
-# Drawing the Lines between cities
-# for index,cordinate in enumerate(cities_cordinates):
-#     i = index
-#     if index != city_number-1:
-#         i = index + 1
-#     pygame.draw.line(screen , (255,255,0) , cordinate ,cities_cordinates[i] , 5)
-#     print('index:',index,'cordinate:',cordinate)
-# pygame.draw.line(screen, (255,255,255),cities_cordinates[city_number-1] , cities_cordinates[0], 5)
-
-
-
+draw_best_road(best_road_exchange , (255,0,0))
 
 
 running = True
@@ -169,20 +188,28 @@ while running:
     keys = pygame.key.get_pressed()
 
     # when we press the key for first time 
-    if not key_down and  keys[pygame.K_LEFT] :#type:ignore
+    if not key_down and  keys[pygame.K_UP] :#type:ignore
         # print('pressed')
         key_down = True
         if index_of_switching_road == 0:
             draw_city()
-            draw_best_road(new_best_road , (255,0,0))
+            draw_best_road(best_road_exchange , (255,0,0))
             index_of_switching_road = 1
         elif index_of_switching_road == 1:
+            draw_city()
+            draw_best_road(best_road_shift , (255,0,255))
+            index_of_switching_road = 2
+        elif index_of_switching_road == 2:
+            draw_city()
+            draw_best_road(best_road_inverse , (0,255,255))
+            index_of_switching_road = 3
+        elif index_of_switching_road == 3:
             draw_city()
             draw_best_road(best , (255,255,255))
             index_of_switching_road = 0
 
     # we change the key_state when we release it 
-    elif key_down and not keys[pygame.K_LEFT]:#type:ignore
+    elif key_down and not keys[pygame.K_UP]:#type:ignore
         #print("realese")
         key_down = False
 
